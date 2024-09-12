@@ -1,6 +1,18 @@
-<p align="center">
-  <img src=".github/node-js-cli-apps-best-practices.png" height="400px" />
-</p>
+<div align="center">
+  <p>
+    <a href="https://nodejs-security.com">
+      <img alt="Node.js Security" align="center" src="https://img.shields.io/badge/%F0%9F%A6%84-Learn%20Node.js%20Security%E2%86%92-gray.svg?colorA=5734F5&colorB=5734F5&style=flat" />
+    </a>
+  </p>
+  
+  ![Screenshot 2024-09-12 at 20 08 07](https://github.com/user-attachments/assets/970a97fd-16bd-4b3c-b535-ae7445b52d4c)
+
+  <p>
+    Learn Node.js Secure Coding techniques and best practices from <a href="https://www.lirantal.com">Liran Tal</a>
+  </p>
+</div>
+
+<br/>
 
 <p align="center">
   <h1 align="center">Node.js CLI Apps Best Practices</h1>
@@ -15,16 +27,19 @@ In this guide I have compiled a list of best practices across areas of focus whi
 
 ### Features:
 
-- ✅ 29 best practices for building successful Node.js CLI applications
-- ✅ Read in a different language: [🇨🇳](./README_zh-Hans.md), [🇪🇸](./README_es.md), or help translate to other languages: [ [🇩🇪](./README-de.md) , ... ]
+- ✅ 37 best practices for building successful Node.js CLI applications
+- ✅ Read in a different language: [🇨🇳](./README_zh-Hans.md), [🇪🇸](./README_es.md), or [help translate](https://crowdin.com/project/nodejs-cli-apps-best-practices) to other languages. [Suggest new languages](https://crowdin.com/project/nodejs-cli-apps-best-practices/discussions).
 - 🙏 Contributions are welcome
 
 <!-- Shields -->
 <p align="center">
 <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img src="https://badgen.net/badge/License/CC BY-SA 4.0/green"/></a>
-<img src="https://badgen.net/badge/Last%20Update/Jan%202021/green" />
+<img src="https://badgen.net/badge/Last%20Update/Jan%202024/green" />
 <a href="https://www.github.com/lirantal/nodejs-cli-apps-best-practices" target="_blank">
-  <img src="https://badgen.net/badge/Node.js CLI Apps/Best Practices/purple" style="margin:8px;" alt="Node.js CLI Apps Best Practices"/>
+  <img src="https://badgen.net/badge/Node.js CLI Apps/Best Practices/purple" alt="Node.js CLI Apps Best Practices"/>
+</a>
+<a href="https://crowdin.com/project/nodejs-cli-apps-best-practices" target="_blank">
+  <img src="https://badges.crowdin.net/nodejs-cli-apps-best-practices/localized.svg"/>
 </a>
 </p>
 
@@ -42,7 +57,7 @@ Some of my recent work, building Node.js CLIs, includes the following Open Sourc
       <a href="https://github.com/lirantal/dockly"><img src="https://repository-images.githubusercontent.com/71667498/d5576f00-69cd-11e9-83dd-2139ad967fdc" width="150px;" alt="dockly - Immersive terminal interface for managing docker containers and services"/><br /><sub><b>Dockly</b></sub></a><br/>Immersive terminal interface for managing docker containers and services
      </td>
      <td align="center">
-      <a href="https://github.com/lirantal/npq"><img src="https://repository-images.githubusercontent.com/114298694/73d29f00-bb7d-11e9-80f5-5f94f25a76b4" width="150px;" alt="npq - safely install packages with npm/yarn by auditing them as part of your install process"/><br /><sub><b>npq</b></sub></a><br/>safely install packages with npm/yarn by auditing them as part of your install process
+      <a href="https://github.com/lirantal/npq"><img src="https://repository-images.githubusercontent.com/114298694/d8de4222-8578-4588-80aa-6c942dc48721" width="150px;" alt="npq - safely install packages with npm/yarn by auditing them as part of your install process"/><br /><sub><b>npq</b></sub></a><br/>safely install packages with npm/yarn by auditing them as part of your install process
      </td>
      <td align="center">
       <a href="https://github.com/lirantal/lockfile-lint"><img src="https://repository-images.githubusercontent.com/189734318/d2d03200-5bfb-11ea-9eb6-70144dbe2197" width="150px;" alt="lockfile-lint - Lint an npm or yarn lockfile to analyze and detect security issues"/><br /><sub><b>lockfile-lint</b></sub></a><br/>Lint an npm or yarn lockfile to analyze and detect security issues
@@ -119,8 +134,19 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
   - 7.3 [Use the files field](#73-use-the-files-field)
 - 8 Analytics
   - 8.1 [Strict Opt-in Analytics](#81-strict-opt-in-analytics)
-- 9 Appendix: CLI Frameworks
-  - 9.1 [CLI Frameworks Table](#91-cli-frameworks-table)
+- 9 Versioning
+  - 9.1 [Include a `--version` Flag](#91-include-a---version-flag)
+  - 9.2 [Use Semantic Versioning](#92-use-semantic-versioning)
+  - 9.3 [Provide Version Information in a 'package.json' file](#93-provide-version-information-in-a-packagejson-file)
+  - 9.4 [Display Version in Error Messages and Help Text](#94-display-version-in-error-messages-and-help-text)
+  - 9.5 [Backward Compatibility](#95-backward-compatibility)
+  - 9.6 [Publish Versioned Releases on npm](#96-publish-versioned-releases-on-npm)
+  - 9.7 [Update Your App's Version Documents](#97-update-your-apps-version-documents)
+- 10 Security
+  - 10.1 [Minimize Argument Injection](#101-minimize-argument-injection)
+- 11 Appendix: CLI Frameworks
+  - 11.1 [CLI Frameworks Table](#111-cli-frameworks-table)
+- 12 Appendix: CLI educational resources
 
 ---
 
@@ -157,7 +183,7 @@ Some examples of expected behavior:
 
 - option-arguments or options can be notated in help or examples as square brackets (`[]`) to indicate they are optional, or with angle brackets (`<>`) to indicate they are required.
 - allow short-form single letter arguments as aliases for long-form arguments (see reference from the [GNU Coding Standards](https://www.gnu.org/prep/standards/html_node/Command_002dLine-Interfaces.html)).
-- options specified using the short form singular `-` may container one alphanumeric character.
+- options specified using the short form singular `-` may contain one alphanumeric character.
 - specifying multiple options with no values may be grouped, such as `myCli -abc` being equivalent to `myCli -a -b -c`.
 
 Command line power-users will expect your command line application to have similar conventions as other Unix apps.
@@ -213,12 +239,6 @@ Information may easily get lost in pale program output, especially when the outp
 Most terminals used today to interact with command line applications support colored text such as these enabled by specially crafted ANSI encoded characters.
 
 A colorful display in your command line application output may further contribute to a richer experience and increased interaction. That said, unsupported terminals may experience a degraded output in the form of garbled information on the screen. Furthermore, a CLI may be used in a continuous integration build job which may not support colored output. Even outside of build servers, a CLI may be used through an IDE's console that may not handle certain characters. Manual opt-out must be available.
-
-Reference projects:
-
-- [chalk](https://www.npmjs.com/package/chalk)
-- [colors](https://www.npmjs.com/package/colors)
-- [kleur](https://www.npmjs.com/package/kleur)
 
 📦 **Recommended packages**
 
@@ -353,6 +373,10 @@ The flip side of using `npm-shrinkwrap.json` is the security implications you ar
 > Use `npm shrinkwrap` command to generate the shrinkwrap lockfile, which is of the same
 > format as that of a `package-lock.json` file.
 
+Another method for vendoring dependencies is to bundle them within the published package, which has the advantage of speeding up installations as it reduces the need to resolve dependencies as well as network requests and bandwidth for download, yet it comes with the disadvantages of being an opaque box for which it is difficult to analyze the dependency tree of the project and result in security tools like Snyk, not reporting vulnerabilities (because Snyk ignores `devDependencies` by default, to reduce noise for developers)
+- Packages are declared as `devDependencies`, so that the package managers will not find any production dependencies to install.
+- The [ncc](https://www.npmjs.com/package/@vercel/ncc) is used to compile a Node.js module into a single file with all of its dependencies in-lined.
+
 References:
 
 - [Do you really know how a lockfile works for yarn and npm packages?](https://snyk.io/blog/making-sense-of-package-lock-files-in-the-npm-ecosystem/)
@@ -370,7 +394,11 @@ The user's file system may contain residue in the form of orphaned configuration
 
 As mentioned in the [stateful data section](#13-stateful-data), if your CLI application uses persistent storage, such as to save configuration files, then the CLI application should also be responsible for removing its configuration files when it gets uninstalled.
 
-You can use NPMs `pre` or `post` uninstall [script](https://docs.npmjs.com/misc/scripts) for this purpose. You can find a working example in this [repository](https://github.com/m-sureshraj/jenni/blob/master/src/scripts/pre-uninstall.js).
+Due to npm package manager not providing uninstall hook since npm v7, your program should include an uninstallation option, either via [arguments](#11-respect-posix-args) (e.g. `--uninstall`) or via [rich interaction](#15-rich-interactions).
+
+> 👍 Tip
+>
+> Optionally you can provide `pre` and `post` uninstall [script](https://docs.npmjs.com/misc/scripts) which will be automatically called if the **npm version is 6 or lower**. You can find a working example in this [repository](https://github.com/m-sureshraj/jenni/blob/master/src/scripts/pre-uninstall.js). 
 
 # 3 Interoperability
 
@@ -925,17 +953,161 @@ Guidelines:
 
 References for other CLIs which collect analytics are [Angular CLI](https://angular.io/analytics), and [Next.js](https://nextjs.org/telemetry) CLI.
 
-# 9 Appendix: CLI Frameworks
+# 9 Versioning
 
-### 9.1 CLI Frameworks Table
+Following these best practices for version information in Node.js CLI apps enhances user experience, facilitates debugging, and ensures efficient project management. 
+
+In this section:
+
+- 9.1 [Include a `--version` Flag](#91-include-a---version-flag)
+- 9.2 [Use Semantic Versioning](#92-use-semantic-versioning)
+- 9.3 [Provide Version Information in a 'package.json' file](#93-provide-version-information-in-a-packagejson-file)
+- 9.4 [Display Version in Error Messages and Help Text](#94-display-version-in-error-messages-and-help-text)
+- 9.5 [Backward Compatibility](#95-backward-compatibility)
+- 9.6 [Publish Versioned Releases on npm](#96-publish-versioned-releases-on-npm)
+- 9.7 [Update Your App's Version Documents](#97-update-your-apps-version-documents)
+
+### 9.1. Include a `--version` Flag
+
+✅ **Do:** 
+Use a proper flag to allow users to check the application's version easily.
+
+❌ **Otherwise:** 
+Users won't know which version they are using, making it challenging to track updates or report issues accurately.
+
+ℹ️ **Details**
+
+As the maintainer of the CLI project, you need to implement a functionality to display the program's version on standard output with the proper flag without any argument, and exit from the program(often also prints compiled-in configuration details as well). You can also use the `-V` as the short flag.
+
+Example:
+
+```sh
+$ my-cli-tool --version
+
+my-cli-tool version 11.0.5, build 11.0.5-0ubuntu1~22.04.1
+```
+
+### 9.2. Use Semantic Versioning
+
+✅ **Do:** 
+Like other projects, use the SemVer format. It provides a clear, standardized way to convey version information, making it easier for users to understand the significance of updates.
+
+❌ **Otherwise:** 
+Users might not understand the impact of updates, leading to confusion or unexpected behavior.
+
+### 9.3. Provide Version Information in a 'package.json' file
+
+✅ **Do:** 
+Try to add version information in `package.json` file because this ensures consistency across your project and makes it easy to automate version updates.
+
+❌ **Otherwise:** 
+You and your program's users will face difficulty in tracking dependencies and managing the project's version.
+
+ℹ️ **Details**
+
+Tools like `npm` or `yarn` offer version management features that simplify handling dependencies and versioning.
+
+> 👍 Tip
+>
+> Use the option of automating version increments that these tools bring, (e.g., `npm version`) to reduce the risk of human error and streamline the release process
+
+### 9.4. Display Version in Error Messages and Help Text
+
+✅ **Do:** 
+Provide the version in error messages so that users can include version information when reporting issues, aiding debugging and support.
+
+❌ **Otherwise:** 
+Debugging becomes more challenging, and users might not know which version to reference when seeking help or even when they use your program as a dependency on other programs.
+   
+### 9.5. Backward Compatibility
+
+✅ **Do:** 
+Ensuring backward compatibility with older versions of your app allows users to upgrade without breaking their workflows.
+
+❌ **Otherwise:** 
+Frequent updates that break compatibility can frustrate users and hinder adoption.
+
+ℹ️ **Details**
+
+Ensure that, even when you remove any functionality or change the format of input/outputs, you come with some description for the user. 
+
+> 👍 Tip
+>
+> Use the document pages to provide an overview of features that are deprecated or soon going to be deprecated and their replacements. Display a message to your users and ask them to learn about the end of support for features by referring to the release notes.
+
+Example:
+
+```sh
+DEPRECATED: The blah-blah-feat is deprecated and will be removed in a future release.
+            Install the blah-feat component to do the blah:
+            <https://url/to/docs>
+```
+
+### 9.6. Publish Versioned Releases on npm
+
+✅ **Do:** 
+Publish your app on npm with version tags enabling users to easily install specific versions.
+
+❌ **Otherwise:** 
+Users can't access previous versions, which might be necessary for compatibility or troubleshooting.
+
+### 9.7. Update Your App's Version Documents
+
+✅ **Do:** 
+Inform users about changes, enhancements, and bug fixes in each version by providing clear release notes; A changelog helps users understand what has changed between versions and whether it affects their use case.
+
+❌ **Otherwise:** 
+Users won't know what to expect in new versions, which can lead to frustration or confusion. They also may struggle to assess whether they should upgrade or not.
+
+# 10 Security
+
+This section deals with security concerns when developing Node.js command line applications.
+
+In this section:
+
+- 10.1 [Minimize Argument Injection](#101-minimize-argument-injection)
+
+### 10.1 Minimize Argument Injection
+
+✅ **Do:**
+Carefully consider which command-line arguments are enabled by your CLI and which commands they are open to. If possible, avoid sensitive system tasks such as file system read/write.
+
+❌ **Otherwise:**
+You risk attackers exploiting command-line argument flags in your CLI to facilitate attack vectors such as file read/write, command execution, and others.
+
+ℹ️ **Details**
+
+Argument injection attacks take advantage of vulnerabilities in how command-line applications parse user input. They happen when untrusted user input gets included as part of a command that the application then executes. In argument injection, attackers specially craft the input used as arguments and parameters in the command in order to carry out malicious actions or access unauthorized data.
+
+Prior-art of security incidents in CLIs due to argument injection:
+- Vulnerability in [git-interface](https://security.snyk.io/vuln/SNYK-JS-GITINTERFACE-2774028)
+- Vulnerability in [git-pull-or-clone](https://security.snyk.io/vuln/SNYK-JS-GITPULLORCLONE-2434307)
+- Vulnerability in [ungit](https://security.snyk.io/vuln/SNYK-JS-UNGIT-2414099)
+- Vulnerability in [simple-git](https://security.snyk.io/vuln/SNYK-JS-SIMPLEGIT-2421199)
+
+References for [Blamer npm package vulnerable to argument injection](https://www.nodejs-security.com/blog/destroyed-by-dashes-how-two-hyphens-cause-argument-injection-vulnerability-in-blamer-npm-package), and [Node.js Secure Coding: Defending Against Command Injection](https://www.nodejs-security.com/book/command-injection) book.
+
+# 11 Appendix: CLI Frameworks
+
+### 11.1 CLI Frameworks Table
 
 | Name  | Description | npm | GitHub | Stars and downloads |
 | ------------- | ------------- | ------------- | ------------- | ------------- |
 | oclif  | A framework for building a command line interface.  | [Link to npm](https://www.npmjs.com/package/oclif) | [Link to GitHub](https://github.com/oclif/oclif) | ![](https://img.shields.io/github/stars/oclif/oclif)![](https://img.shields.io/npm/dt/oclif.svg)
 | inquirer  | A collection of common interactive command line user interfaces.  | [Link to npm](https://www.npmjs.com/package/inquirer) | [Link to GitHub](https://github.com/SBoudrias/Inquirer.js) |![](https://img.shields.io/github/stars/sboudrias/inquirer.js)![](https://img.shields.io/npm/dt/inquirer.svg)
 | ink | Ink provides the same component-based UI building experience that React offers in the browser, but for command-line apps. | [Link to npm](https://www.npmjs.com/package/ink) | [Link to Github](https://github.com/vadimdemedes/ink) | ![](https://img.shields.io/github/stars/vadimdemedes/ink)![](https://img.shields.io/npm/dt/ink.svg)
+| pastel | Next.js-like framework for CLIs made with Ink. | [Link to npm](https://www.npmjs.com/package/pastel) | [Link to Github](https://github.com/vadimdemedes/pastel) | ![](https://img.shields.io/github/stars/vadimdemedes/pastel)![](https://img.shields.io/npm/dt/pastel.svg)
+| ink UI | Collection of customizable UI components for CLIs made with Ink. | [Link to npm](https://www.npmjs.com/package/@inkjs/ui) | [Link to Github](https://github.com/vadimdemedes/ink-ui) | ![](https://img.shields.io/github/stars/vadimdemedes/ink-ui)![](https://img.shields.io/npm/dt/@inkjs/ui.svg)
 |blessed |A curses-like library with a high level terminal interface API for node.js.| [Link to npm](https://www.npmjs.com/package/blessed) | [Link to GitHub](https://github.com/chjj/blessed) | ![](https://img.shields.io/github/stars/chjj/blessed)![](https://img.shields.io/npm/dt/blessed.svg)
+| prompts | Lightweight, beautiful and user-friendly interactive prompts | [Link to npm](https://npmjs.org/package/prompts) | [Link to GitHub](https://github.com/terkelg/prompts) | ![](https://img.shields.io/github/stars/terkelg/prompts)![](https://img.shields.io/npm/dt/prompts.svg)
+| vue-termui  | A Vue.js based terminal UI framework that allows you to build modern terminal applications with ease. | [Link to npm](https://www.npmjs.org/package/vue-termui)      | [Link to GitHub](https://github.com/vue-terminal/vue-termui)       | ![](https://img.shields.io/github/stars/vue-terminal/vue-termui)![](https://img.shields.io/npm/dt/vue-termui.svg)        |
+| clack       | Effortlessly build beautiful command-line apps   | [Link to npm](https://www.npmjs.com/package/@clack/prompts) | [Link to GitHub](https://github.com/natemoo-re/clack/tree/main/packages/prompts) | ![](https://img.shields.io/github/stars/natemoo-re/clack)![](https://img.shields.io/npm/dt/@clack/prompts.svg)
 
+# 12 Appendix: CLI educational resources
+
+* https://clig.dev/
+* https://primer.style/cli/getting-started/principles
+* [@simonplend](https://twitter.com/simonplend) and [@dolearning](https://twitter.com/dolearning/)'s [workshop on crafting human friendly CLIs](https://github.com/simonplend/workshop-crafting-human-friendly-clis)
 
 <!-- markdownlint-disable -->
 
